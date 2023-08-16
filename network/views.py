@@ -29,7 +29,10 @@ def add_post(request):
         user = request.user
         # user = User.objects.get(pk=request.user.id)
         content = request.POST['content']
-        image = request.FILES['image']
+        if request.FILES:
+            image = request.FILES['image']
+        else:
+            image = None
 
         post = Post(author=user, content=content, image_cover=image)
         post.save()
@@ -44,14 +47,11 @@ def profile(request, username):
     following = Follow.objects.filter(current_user = user)
     followers = Follow.objects.filter(second_user = user)
     user_profile = user
-    
-    try:
-        checkFollow = followers.filter(user=User.object.get(pk=request.user.id))
-        isFollowing = True if len(checkFollow != 0) else False
-    except:
-        isFollowing = False 
-    
-    
+    checkFollow = Follow.objects.filter(current_user=user, second_user = user)
+    print(checkFollow)    
+    checkFollow = Follow.objects.filter(current_user=request.user, second_user = user)
+    isFollowing = True if len(checkFollow) != 0 else False
+
     return render(request, "network/profile.html", {
         "posts_of_the_page":posts,
         'username':user.username,
@@ -68,7 +68,7 @@ def follow(request):
         id = User.objects.get(username = request.POST['username']).id
         user = request.user
         second_user =User.objects.get(pk = id)
-        follow_method = Follow(user=user, second_user=second_user)
+        follow_method = Follow(current_user=user, second_user=second_user)
         follow_method.save()
         return HttpResponseRedirect(reverse(profile, kwargs={"username":second_user.username}))
 
@@ -78,7 +78,9 @@ def unfollow(request):
         id = User.objects.get(username = request.POST['username']).id
         user = request.user
         second_user =User.objects.get(pk = id)
-        follow_method = Follow(user=user, second_user=second_user)
+        follow_method = Follow.objects.get(current_user=user, second_user=second_user)
+        print("current_user=",user, 'second_user=',second_user)
+        print(follow_method)
         follow_method.delete()
         return HttpResponseRedirect(reverse(profile, kwargs={"username":second_user.username}))
 
