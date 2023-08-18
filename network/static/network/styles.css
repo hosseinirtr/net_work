@@ -89,3 +89,8 @@ body {
   .textinput-post:focus{
     border-radius:5px !important;
   }
+
+.prfile-section{
+  /* border: 2px solid lightblue; */
+  border-radius: 5px;
+}

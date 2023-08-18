@@ -3,34 +3,73 @@
 <div class="container p-4">
   {% block body %} {% if user.is_authenticated %}
 
-  <h1>{% if user == user_profile %} Hi {%else%} It's {%endif%} {{username}}</h1>
-  <div class="d-flex row justify-content-around">
+  <div
+    class="bg-light d-flex row align-items-center justify-content-around m-1 mt-4 prfile-section"
+  >
     <div>
-      <h3>Follower:{{followers.count}}</h3>
+      <img src="../../static/network/profile.png" width="125px" />
+      <h3>
+        {% if user == user_profile %} Hi {%else%} It's {%endif%} {{username}}
+      </h3>
+    </div>
+
+    <div>
+      <h3>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-people"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"
+          />
+        </svg>
+        Follower:{{followers.count}}
+      </h3>
     </div>
     <div>
-      <h3>Following:{{following.count}}</h3>
+      <h3>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          fill="currentColor"
+          class="bi bi-people"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"
+          />
+        </svg>
+        Following:{{following.count}}
+      </h3>
     </div>
+    <div>
+      {% if user.is_authenticated %}
+      <div>
+        {% if user != user_profile %} {% if isFollowing %}
+        <!-- Unfollow -->
+        <form method="POST" action="{% url 'unfollowing'  %}">
+          {%csrf_token%}
+          <input type="hidden" value="{{username}}" name="username" />
+          <button type="submit" class="btn btn-outline-danger">Unfollow</button>
+        </form>
+        {%else%}
+        <!-- Follow -->
+        <form method="POST" action="{% url 'following'  %}">
+          {%csrf_token%}
+          <input type="hidden" value="{{username}}" name="username" />
+          <button type="submit" class="btn btn-outline-info">Follow</button>
+        </form>
+        {% endif %} {% endif %}
+      </div>
+      {% endif %}
   </div>
+</div>
   {% if user.is_authenticated %}
-  <div>
-    {% if user != user_profile %} {% if isFollowing %}
-    <!-- Unfollow -->
-    <form method="POST" action="{% url 'unfollowing'  %}">
-      {%csrf_token%}
-      <input type="hidden" value="{{username}}" name="username" />
-      <button type="submit" class="btn btn-outline-danger">Unfollow</button>
-    </form>
-    {%else%}
-    <!-- Follow -->
-    <form method="POST" action="{% url 'following'  %}">
-      {%csrf_token%}
-      <input type="hidden" value="{{username}}" name="username" />
-      <button type="submit" class="btn btn-outline-info">Follow</button>
-    </form>
-    {% endif %} {% endif %}
-  </div>
-  {% endif %} {% if user.is_authenticated %}
   <div>
     {% if user == user_profile %}
     <div>{% include 'network/components/post_form.html' %}</div>
