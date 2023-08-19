@@ -41,19 +41,21 @@ def edit_post(request, id):
 
 
 def index(request):
-    posts = Post.objects.all().order_by('-date').annotate(
-        num_likes=Count('likes'),
-        num_dislikes=Count('dislikes'),
-    )
-    # Pagination
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page')
-    posts_of_the_page = paginator.get_page(page_number)
+    posts_of_the_page = []
+    user_liked_id = []
+    if request.user.is_authenticated:
+        posts = Post.objects.all().order_by('-date').annotate(
+            num_likes=Count('likes'),
+            num_dislikes=Count('dislikes'),
+        )
+        # Pagination
+        paginator = Paginator(posts, 10)
+        page_number = request.GET.get('page')
+        posts_of_the_page = paginator.get_page(page_number)
 
-    user_liked = Like.objects.filter(user=request.user).filter(
-        post__in=posts_of_the_page)
-    user_liked_id = [like.post.id for like in user_liked]
-    print(f'\n \n{user_liked_id}\n \n')
+        user_liked = Like.objects.filter(user=request.user).filter(
+            post__in=posts_of_the_page)
+        user_liked_id = [like.post.id for like in user_liked]
     return render(request, "network/index.html", {
         "posts_of_the_page": posts_of_the_page,
         "user_liked_id": user_liked_id
@@ -141,8 +143,10 @@ def unfollow(request):
 
 
 def login_view(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('index'))
 
+    if request.method == "POST":
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -167,6 +171,9 @@ def logout_view(request):
 
 
 def register(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('index'))
+
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
