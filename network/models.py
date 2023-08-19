@@ -7,40 +7,58 @@ from django.db import models
 class User(AbstractUser):
     pass
 
+
 def validate_image_size(value):
     limit = 3 * 1024 * 1024  # 3MB limit
     if value.size > limit:
         raise ValidationError(f"File size exceeds the limit of 3MB.")
 
 
-
 class Post(models.Model):
-    author = models.ForeignKey(User,on_delete=models.CASCADE, related_name='author' )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='author')
     content = models.CharField(max_length=140)
     date = models.DateTimeField(auto_now_add=True)
-    image_cover = models.ImageField(upload_to='img/',null=True, validators=[FileExtensionValidator(['jpg', 'jpeg', 'png']), validate_image_size])
+    image_cover = models.ImageField(upload_to='img/', null=True, validators=[
+                                    FileExtensionValidator(['jpg', 'jpeg', 'png']), validate_image_size])
+    likes = models.ManyToManyField(
+        User, through='Like', related_name='liked_posts')
+    dislikes = models.ManyToManyField(
+        User, through='Dislike', related_name='disliked_posts')
+
     def __str__(self) -> str:
         return f"Post {self.id} made by {self.author} on {self.date.strftime('%d %b %Y %H:%M:%S')}"
 
-    
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='likes_given')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="likes_received")
+
+
+class Dislike(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='dislikes_given')
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="dislikes_received")
+
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, )
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="post")
     date = models.DateTimeField(auto_now_add=True)
+
     def __str__(self) -> str:
         return f"Comment {self.id} made by {self.user} on {self.post.id} at {self.date.strftime('%d %b %Y %H:%M:%S')}"
 
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='likes')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
-    
-class Dislike(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='dislikes')
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="dislikes")
 
 class Follow(models.Model):
-    current_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-    second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
+    current_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='following')
+    second_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='followers')
     each_other = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):

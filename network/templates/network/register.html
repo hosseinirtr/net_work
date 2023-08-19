@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+<div class="container p-5 mt-5 bg-light" style="max-width: 30rem;">
 
     <h2>Register</h2>
 
@@ -24,7 +25,8 @@
         </div>
         <input class="btn btn-primary" type="submit" value="Register">
     </form>
-
+<div class="pt-5">
     Already have an account? <a href="{% url 'login' %}">Log In here.</a>
-
+</div>
+</div>
 {% endblock %}
