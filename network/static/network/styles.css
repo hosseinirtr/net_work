@@ -13,7 +13,10 @@ body {
     margin-right: 15px;
   }
   
-  
+button:focus {
+    border-color: #232323;
+    outline: none;
+}  
   .tweet-wrap {
     max-width:490px;
     background: #fff;

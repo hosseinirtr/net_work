@@ -84,8 +84,11 @@ def unfollow(request):
         follow_method.delete()
         return HttpResponseRedirect(reverse(profile, kwargs={"username":second_user.username}))
 
-
-
+def following_post(request):
+    current_user = request.user
+    follow_list = Follow.objects.get(current_user=current_user)
+    post_of_follower = Post.objects.filter(author__in = follow_list)
+    print(post_of_follower)
 def login_view(request):
     if request.method == "POST":
 
