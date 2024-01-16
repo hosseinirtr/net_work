@@ -41,7 +41,7 @@ def edit_post(request, id):
 
 
 def index(request):
-    posts_of_the_page = []
+    posts_of_the_page =[]
     user_liked_id = []
     if request.user.is_authenticated:
         posts = Post.objects.all().order_by('-date').annotate(
@@ -147,7 +147,7 @@ def login_view(request):
         return HttpResponseRedirect(reverse('index'))
 
     if request.method == "POST":
-        # Attempt to sign user in
+		# Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)

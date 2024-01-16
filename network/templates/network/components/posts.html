@@ -61,57 +61,62 @@
   }
 </script>
 <div class="tweet-wrap">
-  <div class="tweet-header" style="display: flex;
-  flex-direction: inherit;">
+  <div class="tweet-header">
     <img src="../../static/network/profile.png" alt="" class="avator" />
-
-    <div class="d-flex" style="align-items: flex-end">
-      <p> <span class="text-info">
+    <div class="tweet-header-info">
+      <div class="d-flex" style="align-items: flex-end">
+        <span class="text-info">
           <a href="{% url 'profile' post.author.username %}">
             @{{post.author}}
           </a>
-        </span><br />
-        <span> {{post.date}} </span>
+        </span>
+        <span>. {{post.date}} </span>
         <span>
-      </p>
-      <div class="modal fade" id="modal_edit_post_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true"
-        aria-labelledby="#modal_edit_post_{{ post.id }}_lable" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Post</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <textarea rows="10" id="textarea_{{ post.id }}" class="form-control"
-                name="content">{{post.content}}</textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" onclick="handleEditPost({{post.id}})">
-                Save changes
-              </button>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                Close
-              </button>
+          {% if user.is_authenticated%} {% if user == post.author%}
+          <div class="d-flex justify-content-around">
+            <button class="btn p-0 m-0" data-toggle="modal" data-target="#modal_edit_post_{{ post.id }}">
+              <i class="bi bi-pencil-square text-info"></i>
+            </button>
+            <div class="modal fade" id="modal_edit_post_{{ post.id }}" tabindex="-1" role="dialog" aria-hidden="true"
+              aria-labelledby="#modal_edit_post_{{ post.id }}_lable" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Edit Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <textarea rows="10" id="textarea_{{ post.id }}" class="form-control" name="content">
+                    {{post.content}}
+                    </textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="handleEditPost({{post.id}})">
+                      Save changes
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+          {%endif%} {%endif%}
+        </span>
       </div>
-      </span>
+      <div style="max-width: 380px; word-wrap: break-word" id="post_content_{{post.id}}">
+        {{post.content}}
+      </div>
     </div>
   </div>
-  <div class="tweet-main">
-    <div style="max-width: 380px; word-wrap: break-word" id="post_content_{{post.id}}">
-      {{post.content}}
-    </div>
-    {% if post.image_cover %}
-    <div class="tweet-img-wrap">
-      <img src="/media/{{post.image_cover}}" alt="{{post.content}}" style="border-radius: 3px" class="tweet-img" />
-    </div>
-    {%endif%}
+  {% if post.image_cover %}
+  <div class="tweet-img-wrap">
+    <img src="/media/{{post.image_cover}}" alt="{{post.content}}" style="border-radius: 3px" class="tweet-img" />
   </div>
+  {%endif%}
   <div class="tweet-info-counts">
     <div class="comments">
       <button class="btn d-flex row like-button p-0 m-0">
@@ -150,15 +155,6 @@
       <button class="btn">
         <i class="bi bi-send"></i>
       </button>
-    </div>
-    <div>
-      {% if user.is_authenticated%} {% if user == post.author%}
-      <div class="d-flex justify-content-around">
-        <button class="btn p-0 m-0" data-toggle="modal" data-target="#modal_edit_post_{{ post.id }}">
-          <i class="bi bi-pencil-square text-info"></i>
-        </button>
-      </div>
-      {%endif%} {%endif%}
     </div>
   </div>
 </div>

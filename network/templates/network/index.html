@@ -6,31 +6,30 @@
 
   {% if not user.is_authenticated %}
   <div class="container d-flex justify-content-center align-items-center p-4">
-    <div
-      class="d-flex justify-content-center align-items-center flex-column p-5 bg-light"
-      style="max-width: 40rem;"
-    >
+    <div class="d-flex justify-content-center align-items-center flex-column p-5 bg-light" style="max-width: 40rem;">
       <p class="text-justify">
-        <h3 class="text-justify">Wellcome to! </h3>
-        <br />
+      <h3 class="text-justify">Wellcome to! </h3>
+      <br />
 
-        <img src="../../static/network/logo.png" width="300px" />
-        <br />
-        <div class="d-flex justify-content-around" style="align-self: stretch;">
-          <a class="btn btn-info" href="{% url 'login' %}">Log In</a>
-          <a class="btn btn-info" href="{% url 'register' %}">Register</a>
-        </div>
+      <img src="../../static/network/logo.png" width="300px" />
+      <br />
+      <div class="d-flex justify-content-around" style="align-self: stretch;">
+        <a class="btn btn-info" href="{% url 'login' %}">Log In</a>
+        <a class="btn btn-info" href="{% url 'register' %}">Register</a>
+      </div>
 
-        <span class="pt-5">
-          if you are have account can
-          <a href="{% url 'login' %}">Log In</a></span
-        >
+      <p class="pt-5">
+        If you are have account can
+        <a href="{% url 'login' %}">Log In</a>
+      </p>
 
-        <br />
-        <span>
-          and if have'nt account you can
-          <a href="{% url 'register' %}">Register</a>
-        </span>
+      <p class="h-line">
+        OR
+      </p>
+      <p>
+        If have'nt account you can
+        <a href="{% url 'register' %}">Register</a>
+      </p>
       </p>
     </div>
   </div>
@@ -52,22 +51,14 @@
     <ul class="pagination d-flex justify-content-center mt-5">
       {% if posts_of_the_page.has_previous %}
       <li class="page-item">
-        <a
-          class="page-link"
-          href="?page={{posts_of_the_page.previous_page_number}}"
-          aria-label="Previous"
-        >
+        <a class="page-link" href="?page={{posts_of_the_page.previous_page_number}}" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
         </a>
       </li>
       {%endif%} {% if posts_of_the_page.has_next %}
       <li class="page-item">
-        <a
-          class="page-link"
-          href="?page={{posts_of_the_page.next_page_number}}"
-          aria-label="Next"
-        >
+        <a class="page-link" href="?page={{posts_of_the_page.next_page_number}}" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Next</span>
         </a>

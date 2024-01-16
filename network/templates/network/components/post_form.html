@@ -4,16 +4,25 @@
     <div class="form-group d-flex">
         <textarea maxlength="140" class="form-control textinput-post" id="exampleFormControlTextarea1"
             style="border-radius: 15px;" placeholder="write what in your mind..." rows="3" name="content"></textarea>
-        <button type="submit" class="btn p-0 m-0">
-            <h3>
-                <i class="bi bi-pencil-square m-0 p-0" style="color:blue"></i>
-            </h3>
-        </button>
+        <div>
+            <button type="submit" class="btn p-0 m-0">
+                <h3>
+                    <i class="bi bi-image" style="color:rgb(245, 124, 144)"></i>
+                </h3>
+            </button>
+            <button type="submit" class="btn p-0 m-0">
+                <h3>
+                    <i class="bi bi-pencil-square m-0 p-0" style="color:blue"></i>
+                </h3>
+            </button>
+
+        </div>
 
     </div>
     <div class="d-flex" style="justify-content: space-between;">
         <div class="btn btn-outline-primary">
             <input type="file" id="image-input" name="image" accept="image/*">
+            <div id="image-preview"></div>
         </div>
 
     </div>
